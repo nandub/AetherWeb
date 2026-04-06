@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<helpItems schema="maml">
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>AetherWeb</command:name>
+      <maml:description>
+        <maml:para>External help placeholder for AetherWeb 1.6.0. Comment-based help includes expanded examples for server creation, routes, middleware, request parsing, uploads, and CORS. See README.md for end-to-end examples.</maml:para>
+      </maml:description>
+    </command:details>
+  </command:command>
+<!-- Added in 1.6.0: MOM bridge queue helpers and middleware. -->
+</helpItems>
