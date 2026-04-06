@@ -50,7 +50,7 @@ None.
 
 .NOTES
 Assumptions:
-- AetherWeb 1.7.0 is installed and importable.
+- AetherWeb is either installed as a module or available locally under ..\Source.
 - Designed for Windows PowerShell 5.1.
 - This is a demo/internal service example, not a hardened public internet service.
 #>
@@ -80,7 +80,14 @@ param(
     [string]$ManagementToken
 )
 
-Import-Module AetherWeb -Force -ErrorAction Stop
+$moduleManifestPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Source\AetherWeb.psd1'
+
+if (Test-Path -LiteralPath $moduleManifestPath) {
+    Import-Module $moduleManifestPath -Force -ErrorAction Stop
+}
+else {
+    Import-Module AetherWeb -Force -ErrorAction Stop
+}
 
 $logsPath = Split-Path -Path $RequestLogPath -Parent
 
@@ -109,6 +116,10 @@ $server = New-HttpServer `
     -RequestLogFormat JsonLines `
     -MaxRequestBodyBytes 1MB `
     -MaxMultipartFileBytes 10MB
+
+if ($null -eq $server) {
+    return
+}
 
 # Correlation middleware
 Add-HttpMiddleware -Server $server -Name 'Correlation' -ScriptBlock {
