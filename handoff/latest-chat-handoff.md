@@ -14,6 +14,10 @@
 
 \- Help/docs expanded
 
+\- Start-DemoWorker.ps1 reconciled with the current Start-FileQueueWorker surface
+
+\- duplicate function redefinitions were removed so the module now keeps one implementation per function
+
 
 
 \## What failed and was learned
@@ -25,6 +29,8 @@
 \- middleware closures needed GetNewClosure
 
 \- Start-DemoWorker.ps1 drifted from module function parameters
+
+\- duplicate function bodies made it too easy to mistake superseded code for active code
 
 
 
@@ -40,7 +46,7 @@
 
 \## Next concrete task
 
-\- repair Start-DemoWorker.ps1 against current Start-FileQueueWorker signature
+\- host-validate /api/messages/{id} and /api/messages/stats
 
-\- then validate message processing end-to-end
+\- then validate message processing end-to-end with the reconciled demo worker
 

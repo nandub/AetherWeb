@@ -1,6 +1,6 @@
-## AetherWeb 1.7.7
+## AetherWeb 1.7.8
 
-This release fixes `Get-FileQueueStats` and the `/api/messages/stats` route path handling, and expands comment-based help examples across the exported functions.
+This release reconciles `Start-DemoWorker.ps1` with the current `Start-FileQueueWorker` surface, removes older duplicate function definitions from `AetherWeb.psm1`, and adds PowerShell 5.1-compatible Pester smoke tests to guard the worker and module definition surface.
 
 # AetherWeb 1.6.0
 

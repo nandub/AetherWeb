@@ -20,6 +20,9 @@ The processing lease duration in seconds.
 .PARAMETER PollIntervalSeconds
 The polling interval when waiting for work.
 
+.PARAMETER StopFilePath
+Optional sentinel file path. When the file exists, the worker exits cleanly.
+
 .PARAMETER UntilEmpty
 When specified, the worker exits after the queue becomes empty.
 
@@ -38,6 +41,10 @@ None.
 
 .OUTPUTS
 None.
+
+.NOTES
+This example prefers the repo module manifest when run from source so the script
+stays aligned with the checked-in module during development.
 #>
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
@@ -49,20 +56,35 @@ param(
     [int]$LeaseSeconds = 300,
 
     [Parameter()]
+    [ValidateRange(1, 300)]
+    [int]$PollIntervalSeconds = 1,
+
+    [Parameter()]
+    [string]$StopFilePath,
+
+    [Parameter()]
     [switch]$UntilEmpty
 )
 
-Import-Module AetherWeb -Force -ErrorAction Stop
+$moduleManifestPath = Join-Path -Path $PSScriptRoot -ChildPath '..\Source\AetherWeb.psd1'
+
+if (Test-Path -LiteralPath $moduleManifestPath) {
+    Import-Module $moduleManifestPath -Force -ErrorAction Stop
+}
+else {
+    Import-Module AetherWeb -Force -ErrorAction Stop
+}
 
 if ($PSCmdlet.ShouldProcess($QueuePath, 'Repair queue and start worker')) {
-    Repair-FileMessageQueue -Path $QueuePath -ResumeStaleMessages | Out-Null
+    Repair-FileMessageQueue -Path $QueuePath | Out-Null
 
-    Start-FileQueueWorker `
-        -Path $QueuePath `
-        -ResumeStaleMessages `
-        -LeaseSeconds $LeaseSeconds `
-        -UntilEmpty:$UntilEmpty `
-        -HandlerScriptBlock {
+    $workerParameters = @{
+        Path                     = $QueuePath
+        ResumeStaleMessages      = $true
+        LeaseSeconds             = $LeaseSeconds
+        PollIntervalMilliseconds = ($PollIntervalSeconds * 1000)
+        UntilEmpty               = $UntilEmpty
+        HandlerScriptBlock       = {
             param($Message)
 
             $payload = $Message.Payload
@@ -82,14 +104,20 @@ if ($PSCmdlet.ShouldProcess($QueuePath, 'Repair queue and start worker')) {
             Start-Sleep -Seconds 2
 
             [pscustomobject]@{
-                MessageId      = $Message.MessageId
-                MessageType    = $Message.MessageType
-                Target         = $target
-                JobType        = $jobType
-                ProcessedAt    = Get-Date
-                WorkerMachine  = $env:COMPUTERNAME
-                Outcome        = 'Completed'
+                MessageId     = $Message.MessageId
+                MessageType   = $Message.MessageType
+                Target        = $target
+                JobType       = $jobType
+                ProcessedAt   = Get-Date
+                WorkerMachine = $env:COMPUTERNAME
+                Outcome       = 'Completed'
             }
-        } `
-        -Verbose:$VerbosePreference
+        }
+    }
+
+    if ($PSBoundParameters.ContainsKey('StopFilePath')) {
+        $workerParameters.StopFilePath = $StopFilePath
+    }
+
+    Start-FileQueueWorker @workerParameters -Verbose:$VerbosePreference
 }

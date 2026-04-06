@@ -302,8 +302,8 @@ It is **not** intended to be a hardened public internet web framework.
 Because the module evolved through multiple patch cycles, the project should continue to prioritize:
 
 * host-side validation
-* cleanup of duplicate or superseded implementations
 * demo script/module synchronization
+* shutdown/background-hosting stabilization
 * careful PowerShell 5.1 runtime testing
 
 ## Contributing
@@ -322,4 +322,3 @@ When contributing changes:
 
 Licensed under the MIT License.  
 See the [LICENSE](LICENSE) file for details.
-

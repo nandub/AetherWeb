@@ -10,7 +10,7 @@ AetherWeb PowerShell module
 
 \## Current Version
 
-1.7.7
+1.7.8
 
 
 
@@ -18,19 +18,23 @@ AetherWeb PowerShell module
 
 \- Start-DemoServer.ps1 currently works
 
+\- Start-DemoWorker.ps1 parameter surface now matches Start-FileQueueWorker
+
 \- /health works
 
 \- /admin/stop works
 
 \- core listener no longer hangs
 
+\- duplicate exported function redefinitions were removed from AetherWeb.psm1
+
 
 
 \## Current Problems
 
-\- Start-DemoWorker.ps1 had drift against Start-FileQueueWorker parameters
+\- queue/message status routes still need host validation after the recent patch series
 
-\- queue/message status routes were patched multiple times
+\- shutdown/background behavior still needs stabilization cleanup
 
 \- package line has had several runtime fixes after host testing
 
@@ -52,15 +56,13 @@ AetherWeb PowerShell module
 
 \## Immediate Next Tasks
 
-1\. Reconcile Start-DemoWorker.ps1 with current module parameters
+1\. Host-validate /api/messages/{id} and /api/messages/stats
 
-2\. Host-validate /api/messages/{id} and /api/messages/stats
+2\. Validate message processing end-to-end with the reconciled demo worker
 
-3\. Audit duplicate function redefinitions in AetherWeb.psm1
+3\. Stabilize shutdown/background behavior
 
-4\. Stabilize shutdown/background behavior
-
-5\. Reduce technical debt before adding features
+4\. Reduce remaining technical debt before adding features
 
 
 

@@ -1,6 +1,6 @@
 @{
     RootModule        = 'AetherWeb.psm1'
-    ModuleVersion = '1.7.7'
+    ModuleVersion = '1.7.8'
     GUID              = 'f08eb763-a035-455c-87bf-e69f4075b689'
     Author            = 'OpenAI, Fernando Ortiz'
     CompanyName       = 'OpenAI'

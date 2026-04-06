@@ -20,6 +20,8 @@ This should track the important choices already made, for example:
 
 \- `localhost` hostname issues were HTTP.sys prefix/ACL behavior, not route bugs
 
+\- when duplicate function definitions exist in the module, keep the later effective implementation and delete the older superseded copy
+
 
 
 \## 5. Track active defects in `docs/known-issues.md`
